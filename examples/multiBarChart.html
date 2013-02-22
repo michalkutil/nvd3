@@ -13,8 +13,8 @@ text {
   font: 12px sans-serif;
 }
 
-#chart1 {
-  height: 500px;
+#chart1, #chart2 {
+  height: 200px;
   margin: 10px;
   min-width: 100px;
   min-height: 100px;
@@ -27,8 +27,12 @@ text {
 
 </style>
 <body>
-
+  <p>Resize the window to test legend width.</p>
   <div id="chart1">
+    <svg></svg>
+  </div>
+
+  <div id="chart2">
     <svg></svg>
   </div>
 
@@ -86,6 +90,27 @@ nv.addGraph(function() {
     return chart;
 });
 
+nv.addGraph(function() {
+    chart = nv.models.multiBarChart();
+    chart.showControls(false);
+
+    chart.xAxis
+        .showMaxMin(true)
+        .tickFormat(d3.format(',f'));
+
+    chart.yAxis
+        .tickFormat(d3.format(',.1f'));
+
+    d3.select('#chart2 svg')
+        .datum(negative_test_data)
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    chart.dispatch.on('stateChange', function(e) { nv.log('New State:', JSON.stringify(e)); });
+
+    return chart;
+});
 
 
 
